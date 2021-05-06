@@ -8,11 +8,7 @@ contract Token{
     string public symbol = "CFR";
     uint256 public decimals = 18;
     uint256 public totalSupply; 
-
-    //Track Balances
-    mapping(address=>uint256) public balanceOf; 
-    //Send Tokens
-    //mapping(address=>uint) balanceOf; 
+    mapping(address=>uint256) public balanceOf;
 
     constructor() public {
         totalSupply = 1000000 * (10**decimals); 
