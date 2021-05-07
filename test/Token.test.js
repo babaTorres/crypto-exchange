@@ -1,4 +1,5 @@
-import {tokens} from './helpers'
+import { invalid } from 'moment';
+import {tokens,EVM_REVERT} from './helpers'
 
 const Token = artifacts.require('./Token'); 
 
@@ -46,26 +47,50 @@ contract('Token', ([deployer, receiver])=> {
 
     })
 
-    describe('Sending Tokens', ()=> {
-        it('Able to tranfer token balances', async()=>{
-            let balanceOf;
-            balanceOf = await token.balanceOf(deployer);
-            console.log('deployer balance' + balanceOf); 
-            balanceOf = await token.balanceOf(receiver);  
-            console.log('deployer balance' + balanceOf.toString());
+    describe('Sending Tokens', () => {
+        let amount;
+        let result;
 
-            //Transer
-            await token.transfer(receiver, tokens(100), {from: deployer})
-            //After Transfer
+        describe('Success', () => {
 
-            balanceOf = await token.balanceOf(deployer);
-            balanceOf.toString().should.equal(tokens(999900).toString())
-            console.log('deployer balance' + balanceOf); 
-            balanceOf = await token.balanceOf(receiver);  
-            balanceOf.toString().should.equal(tokens(100).toString());
-            console.log('receiver balance' + balanceOf.toString());
-            
+            beforeEach(async () => {
+                amount = tokens(100);
+                result = await token.transfer(receiver, amount, { from: deployer })
+            })
+            it('Able to tranfer token balances', async () => {
+                let balanceOf;
+
+                balanceOf = await token.balanceOf(deployer);
+                balanceOf.toString().should.equal(tokens(999900).toString())
+                balanceOf = await token.balanceOf(receiver);
+                balanceOf.toString().should.equal(tokens(100).toString());
+
+            })
+            it('It emits a transfer event', async () => {
+                const log = result.logs[0];
+                log.event.should.eq('Transfer');
+                const event = log.args;
+                event.from.toString().should.eq(deployer, 'from is correct');
+                event.to.toString().should.eq(receiver, "_to is correct");
+                event.value.toString().should.eq(amount.toString(), "value is correct");
+            })
         })
 
+        describe('Failure', () => {
+            it("Reject insuffceint balances", async ()=>{
+
+                let invalidAmount
+                invalidAmount = tokens(100000000);
+                await token.transfer(receiver,invalidAmount,{from: deployer}).should.be.rejectedWith(EVM_REVERT);
+
+                invalidAmount = tokens(10);
+                await token.transfer(deployer,invalidAmount,{from: receiver}).should.be.rejectedWith(EVM_REVERT);
+            })
+
+            it('Invalid recipients', async ()=>{
+                await token.transfer(0x0, amount, {from: deployer}).should.be.rejected;
+            })
+           
+        })
     })
 })
