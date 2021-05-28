@@ -11,9 +11,9 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 // [X] Withdraw tokens
 // [X] Check balances
 // [X] Make order
-// [ ] Cancel order
-// [ ] Fill order
-// [ ] Charge fees
+// [X] Cancel order
+// [X] Fill order
+// [X] Charge fees
 
 contract Exchange {
     using SafeMath for uint;
