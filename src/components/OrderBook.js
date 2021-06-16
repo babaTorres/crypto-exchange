@@ -19,17 +19,22 @@ const renderOrder = (order) => {
 const showOrderBook = (props) => {
   const { orderBook } = props
 
-  return(
-    <tbody>
-      {orderBook.sellOrders.map((order) => renderOrder(order))}
-      <tr>
-        <th>DAPP</th>
-        <th>DAPP/ETH</th>
-        <th>ETH</th>
-      </tr>
-      {orderBook.buyOrders.map((order) => renderOrder(order))}
-    </tbody>
-  )
+    return (
+        <tbody>
+            <tr>
+                <th>CFR</th>
+                <th>CFR/ETH</th>
+                <th>CFR</th>
+            </tr>
+            {orderBook.sellOrders.map((order) => renderOrder(order))}
+            <tr>
+                <th>CFR</th>
+                <th>CFR/ETH</th>
+                <th>CFR</th>
+            </tr>
+            {orderBook.buyOrders.map((order) => renderOrder(order))}
+        </tbody>
+    )
 }
 
 class OrderBook extends Component {
