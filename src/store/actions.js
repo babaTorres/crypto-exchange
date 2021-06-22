@@ -48,5 +48,29 @@ export function allOrdersLoaded(allOrders){
     allOrders
   }
 }
-  
 
+export function orderCancelling(){
+  return {
+    type: 'ORDER_CANCELLING',
+  }
+}
+
+export function orderCancelled(order){
+  return {
+    type: 'ORDER_CANCELLED',
+    order
+  }
+}
+
+export function orderFilling(){
+  return {
+    type: 'ORDER_FILLING',
+  }
+}
+
+export function orderFilled(order){
+  return {
+    type: 'ORDER_FILLED',
+    order
+  }
+}
